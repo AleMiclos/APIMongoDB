@@ -23,9 +23,11 @@ const app = express();
 app.use(express.json());
 
 // Configuração do CORS para permitir seu frontend
+const port = process.env.PORT || 3001;
+
 app.use(cors({
-  origin: 'https://tabela-react-js.vercel.app'  // Substitua pela URL do seu front-end no Vercel
-}));
+    origin: 'https://tabela-react-js.vercel.app'  // Substitua pela URL do seu front-end no Vercel
+  }));
 
 // Rota para salvar o placar
 app.post('/save-score', async (req, res) => {
