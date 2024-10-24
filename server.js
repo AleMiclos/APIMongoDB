@@ -60,7 +60,7 @@ app.post('/save-score', async (req, res) => {
 // Rota para listar todos os placares
 app.get('/scores', async (req, res) => {
     try {
-        const scores = await Score.find().sort({ score: -1 }); // Ordenar por pontuação, do maior para o menor
+        const scores = await Score.find().sort({ score: -1 });
         res.status(200).json(scores);
     } catch (err) {
         console.error('Erro ao buscar os placares:', err);
@@ -71,7 +71,7 @@ app.get('/scores', async (req, res) => {
 // Rota para listar os 10 melhores placares
 app.get('/top-scores', async (req, res) => {
     try {
-        const topScores = await Score.find().sort({ score: -1 }).limit(10); // Top 10
+        const topScores = await Score.find().sort({ score: -1 }).limit(10);
         res.status(200).json(topScores);
     } catch (err) {
         console.error('Erro ao buscar os melhores placares:', err);
