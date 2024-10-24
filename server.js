@@ -3,10 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-app.use(express.json()); // Certifique-se de que isso está definido antes de suas rotas
+// Inicialize o aplicativo Express
+const app = express();
 
+// Middleware para permitir requisições JSON
+app.use(express.json()); // Deve ser definido antes de suas rotas
 
-// Inicialize a variável antes de usá-la
+// Conectar ao MongoDB
 const uri = process.env.MONGODB_URI;
 
 console.log('MONGODB_URI:', uri); // Verifica se a variável está correta
@@ -16,7 +19,7 @@ if (!uri) {
     process.exit(1);
 }
 
-// Conectar ao MongoDB sem as opções obsoletas
+// Conectar ao MongoDB sem as opções depreciadas
 mongoose.connect(uri)
   .then(() => console.log('Conectado ao MongoDB!'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
@@ -29,10 +32,6 @@ const scoreSchema = new mongoose.Schema({
 });
 
 const Score = mongoose.model('Score', scoreSchema);
-
-// Configurando o Express
-const app = express();
-app.use(express.json());
 
 // Configuração do CORS para permitir seu frontend
 const port = process.env.PORT || 3001;
@@ -88,11 +87,3 @@ app.get('/top-scores', async (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
-
-
-try {
-    const jsonData = JSON.parse(response);  // Substitua 'response' pela sua variável
-} catch (error) {
-    console.error('Erro ao fazer parse do JSON:', error);
-    console.log('Dados recebidos:', response);  // Verifique o que foi recebido
-}
