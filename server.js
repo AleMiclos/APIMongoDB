@@ -1,24 +1,22 @@
-require('dotenv').config();
+require('dotenv').config();  // Carregar variáveis de ambiente
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// Carregar variáveis de ambiente
-require('dotenv').config();
+// Inicialize a variável antes de usá-la
+const uri = process.env.MONGODB_URI;
 
-console.log('MONGODB_URI:', uri); // Adicione isso para verificar se a variável está correta
+console.log('MONGODB_URI:', uri); // Verifica se a variável está correta
 
 if (!uri) {
     console.error('Erro: A variável de ambiente MONGODB_URI não está definida.');
     process.exit(1);
 }
 
-const uri = process.env.MONGODB_URI;
-
-mongoose.connect(uri)
+// Conectar ao MongoDB
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conectado ao MongoDB!'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
-
 
 // Definindo o esquema do MongoDB
 const scoreSchema = new mongoose.Schema({
@@ -44,7 +42,7 @@ app.use(cors({
 app.post('/save-score', async (req, res) => {
     const { username, score } = req.body;
 
-    if (!username || score === undefined) { // Mudança para verificar se o score é fornecido
+    if (!username || score === undefined) {
         return res.status(400).send('Por favor, forneça um nome de usuário e um placar');
     }
 
@@ -54,7 +52,7 @@ app.post('/save-score', async (req, res) => {
         await newScore.save();
         res.status(201).send('Placar salvo com sucesso!');
     } catch (err) {
-        console.error('Erro ao salvar o placar:', err); // Log do erro
+        console.error('Erro ao salvar o placar:', err);
         res.status(500).send('Erro ao salvar o placar');
     }
 });
@@ -65,7 +63,7 @@ app.get('/scores', async (req, res) => {
         const scores = await Score.find().sort({ score: -1 }); // Ordenar por pontuação, do maior para o menor
         res.status(200).json(scores);
     } catch (err) {
-        console.error('Erro ao buscar os placares:', err); // Log do erro
+        console.error('Erro ao buscar os placares:', err);
         res.status(500).send('Erro ao buscar os placares');
     }
 });
@@ -76,7 +74,7 @@ app.get('/top-scores', async (req, res) => {
         const topScores = await Score.find().sort({ score: -1 }).limit(10); // Top 10
         res.status(200).json(topScores);
     } catch (err) {
-        console.error('Erro ao buscar os melhores placares:', err); // Log do erro
+        console.error('Erro ao buscar os melhores placares:', err);
         res.status(500).send('Erro ao buscar os melhores placares');
     }
 });
