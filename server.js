@@ -5,12 +5,13 @@ const cors = require('cors');
 // Carregar variáveis de ambiente
 require('dotenv').config();
 
-// Configuração do MongoDB
-const uri = process.env.MONGODB_URI; // Certifique-se de que esta variável está definida
+const uri = process.env.MONGODB_URI;
+
+console.log('MONGODB_URI:', uri); // Adicione isso para verificar se a variável está correta
 
 if (!uri) {
     console.error('Erro: A variável de ambiente MONGODB_URI não está definida.');
-    process.exit(1); // Saia do processo se a URI não estiver definida
+    process.exit(1);
 }
 
 mongoose.connect(uri, {
@@ -19,6 +20,7 @@ mongoose.connect(uri, {
 })
 .then(() => console.log('Conectado ao MongoDB!'))
 .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
+
 
 // Definindo o esquema do MongoDB
 const scoreSchema = new mongoose.Schema({
