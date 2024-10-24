@@ -6,8 +6,6 @@ const cors = require('cors');
 // Carregar variáveis de ambiente
 require('dotenv').config();
 
-const uri = process.env.MONGODB_URI;
-
 console.log('MONGODB_URI:', uri); // Adicione isso para verificar se a variável está correta
 
 if (!uri) {
@@ -15,7 +13,9 @@ if (!uri) {
     process.exit(1);
 }
 
-mongoose.connect(process.env.MONGODB_URI)
+const uri = process.env.MONGODB_URI;
+
+mongoose.connect(uri)
   .then(() => console.log('Conectado ao MongoDB!'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
