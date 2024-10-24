@@ -1,4 +1,4 @@
-require('dotenv').config();  // Carregar variáveis de ambiente
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -13,8 +13,8 @@ if (!uri) {
     process.exit(1);
 }
 
-// Conectar ao MongoDB
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+// Conectar ao MongoDB sem as opções depreciadas
+mongoose.connect(uri)
   .then(() => console.log('Conectado ao MongoDB!'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
