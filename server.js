@@ -64,22 +64,26 @@ app.post('/save-score', async (req, res) => {
 // Rota para listar todos os placares
 app.get('/scores', async (req, res) => {
     try {
-        const scores = await Score.find().sort({ score: -1 });
+        const scores = await Score.find({}, { field: 0 }) // Projeção
+            .collation({ locale: 'en', strength: 2 }) // Collation
+            .sort({ field: -1 }); // Ordenação
         res.status(200).json(scores);
     } catch (err) {
         console.error('Erro ao buscar os placares:', err);
-        res.status(500).send('Erro ao buscar os placares');
+        res.status(500).json({ error: 'Erro ao buscar os placares' });
     }
 });
 
 // Rota para listar os 10 melhores placares
-app.get('/top-scores', async (req, res) => {
+app.get('/scores', async (req, res) => {
     try {
-        const topScores = await Score.find().sort({ score: -1 }).limit(10);
-        res.status(200).json(topScores);
+        const scores = await Score.find({}, { field: 0 }) // Projeção
+            .collation({ locale: 'en', strength: 2 }) // Collation
+            .sort({ field: -1 }); // Ordenação
+        res.status(200).json(scores);
     } catch (err) {
-        console.error('Erro ao buscar os melhores placares:', err);
-        res.status(500).send('Erro ao buscar os melhores placares');
+        console.error('Erro ao buscar os placares:', err);
+        res.status(500).json({ error: 'Erro ao buscar os placares' });
     }
 });
 
