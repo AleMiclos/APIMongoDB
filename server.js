@@ -3,6 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+app.use(express.json()); // Certifique-se de que isso está definido antes de suas rotas
+
+
 // Inicialize a variável antes de usá-la
 const uri = process.env.MONGODB_URI;
 
@@ -40,6 +43,8 @@ app.use(cors({
 
 // Rota para salvar o placar
 app.post('/save-score', async (req, res) => {
+    console.log('Dados recebidos:', req.body); // Use req.body em vez de response
+
     const { username, score } = req.body;
 
     if (!username || score === undefined) {
