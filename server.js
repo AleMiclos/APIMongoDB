@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-
 // Configuração do MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -22,7 +21,11 @@ const Score = mongoose.model('Score', scoreSchema);
 // Configurando o Express
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// Configuração do CORS para permitir seu frontend
+app.use(cors({
+  origin: 'https://tabela-react-js.vercel.app'  // Substitua pela URL do seu front-end no Vercel
+}));
 
 // Rota para salvar o placar
 app.post('/save-score', async (req, res) => {
@@ -43,9 +46,9 @@ app.post('/save-score', async (req, res) => {
 });
 
 // Iniciar o servidor
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log('Servidor rodando na porta ${PORT}');
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
 
 // Rota para listar todos os placares
