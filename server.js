@@ -2,12 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+// Carregar variáveis de ambiente
+require('dotenv').config();
+
 // Configuração do MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+const uri = process.env.MONGODB_URI; // Certifique-se de que esta variável está definida
+
+if (!uri) {
+    console.error('Erro: A variável de ambiente MONGODB_URI não está definida.');
+    process.exit(1); // Saia do processo se a URI não estiver definida
+}
+
+mongoose.connect(uri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log('Conectado ao MongoDB'))
-  .catch(err => console.error('Erro ao conectar ao MongoDB', err));
+    useUnifiedTopology: true,
+})
+.then(() => console.log('Conectado ao MongoDB!'))
+.catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
 // Definindo o esquema do MongoDB
 const scoreSchema = new mongoose.Schema({
@@ -27,13 +38,13 @@ const port = process.env.PORT || 3001;
 
 app.use(cors({
     origin: 'https://tabela-react-js.vercel.app'  // Substitua pela URL do seu front-end no Vercel
-  }));
+}));
 
 // Rota para salvar o placar
 app.post('/save-score', async (req, res) => {
     const { username, score } = req.body;
 
-    if (!username || !score) {
+    if (!username || score === undefined) { // Mudança para verificar se o score é fornecido
         return res.status(400).send('Por favor, forneça um nome de usuário e um placar');
     }
 
@@ -43,14 +54,9 @@ app.post('/save-score', async (req, res) => {
         await newScore.save();
         res.status(201).send('Placar salvo com sucesso!');
     } catch (err) {
+        console.error('Erro ao salvar o placar:', err); // Log do erro
         res.status(500).send('Erro ao salvar o placar');
     }
-});
-
-// Iniciar o servidor
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
 });
 
 // Rota para listar todos os placares
@@ -59,6 +65,7 @@ app.get('/scores', async (req, res) => {
         const scores = await Score.find().sort({ score: -1 }); // Ordenar por pontuação, do maior para o menor
         res.status(200).json(scores);
     } catch (err) {
+        console.error('Erro ao buscar os placares:', err); // Log do erro
         res.status(500).send('Erro ao buscar os placares');
     }
 });
@@ -69,6 +76,12 @@ app.get('/top-scores', async (req, res) => {
         const topScores = await Score.find().sort({ score: -1 }).limit(10); // Top 10
         res.status(200).json(topScores);
     } catch (err) {
+        console.error('Erro ao buscar os melhores placares:', err); // Log do erro
         res.status(500).send('Erro ao buscar os melhores placares');
     }
+});
+
+// Iniciar o servidor
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });
