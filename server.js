@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // Configuração do MongoDB
-mongoose.connect('mongodb://localhost:27017/gameScores', {
+mongoose.connect('mongodb+srv://alexandremiclos:alexandremiclos@scores.stzvf.mongodb.net/?retryWrites=true&w=majority&appName=scores', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Conectado ao MongoDB'))
